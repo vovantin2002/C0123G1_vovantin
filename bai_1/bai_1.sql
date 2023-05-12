@@ -1,11 +1,9 @@
-CREATE TABLE users (
+CREATE TABLE class (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
+    name VARCHAR(45) NOT NULL
 );
-ALTER TABLE `student-management`.`users` 
-CHANGE COLUMN `name` `name` VARCHAR(25) NOT NULL , RENAME TO  `student-management`.`class` ;
 SELECT * FROM `student-management`.class;
-create table Teacher(
+create table teacher(
 id int  auto_increment primary key,
 `name` varchar(45) ,
 age int not null,
