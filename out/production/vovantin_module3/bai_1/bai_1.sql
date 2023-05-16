@@ -1,13 +1,16 @@
-CREATE TABLE class (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(45) NOT NULL
+create database `student-management`;
+use `student-management`;
+
+create table class (
+    id int auto_increment primary key,
+    name varchar(45) not null
 );
-SELECT * FROM `student-management`.class;
+
 create table teacher(
 id int  auto_increment primary key,
 `name` varchar(45) ,
 age int not null,
 country varchar(45)
 );
-SELECT * FROM `student-management`.teacher;
+
 
