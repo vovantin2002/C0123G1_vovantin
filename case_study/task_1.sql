@@ -338,10 +338,14 @@ order by thang;
 -- task 10.	Hiển thị thông tin tương ứng với từng hợp đồng thì đã sử dụng bao nhiêu dịch vụ đi kèm. 
 -- Kết quả hiển thị bao gồm ma_hop_dong, ngay_lam_hop_dong, ngay_ket_thuc, tien_dat_coc, 
 -- so_luong_dich_vu_di_kem (được tính dựa trên việc sum so_luong ở dich_vu_di_kem).
-select hd.ma_hop_dong, hd.ngay_lam_hop_dong, hd.ngay_ket_thuc, hd.tien_dat_coc, sum(dvdk.so_luong) as so_luong_dich_vu_di_kem
+select hd.ma_hop_dong, hd.ngay_lam_hop_dong, hd.ngay_ket_thuc, hd.tien_dat_coc, sum(hdct.so_luong)as so_luong_dich_vu_di_kem
 from hop_dong as hd 
+join hop_dong_chi_tiet hdct
+on hd.ma_hop_dong = hdct.ma_hop_dong
 join dich_vu_di_kem as dvdk 
-on hd.ma_dich_vu=dvdk.ma_dich_vu_di_kem;
+on hd.ma_dich_vu=dvdk.ma_dich_vu_di_kem
+group by hd.ma_hop_dong;
+
 
 SELECT * FROM case_study.bo_phan;
 -- //abc -- 
