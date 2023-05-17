@@ -244,6 +244,7 @@ ALTER TABLE hop_dong_chi_tiet
 ADD FOREIGN KEY (ma_dich_vu_di_kem)
 REFERENCES dich_vu_di_kem(ma_dich_vu_di_kem);
 
+
 -- --task 2 Hiển thị thông tin của tất cả nhân viên có trong hệ thống có tên bắt đầu là một trong các ký tự “H”, “T” hoặc “K” và có tối đa 15 kí tự.
 
 select *
@@ -296,21 +297,6 @@ where ldv.ma_loai_dich_vu not in (
     where year(hd.ngay_lam_hop_dong) = 2021 and month(hd.ngay_lam_hop_dong) in (1, 2, 3)
 ) 
 group by dv.ma_dich_vu;
-select dv.ma_dich_vu, dv.ten_dich_vu, dv.dien_tich, dv.chi_phi_thue, ldv.ten_loai_dich_vu
-from dich_vu as dv
-join hop_dong as hd
-on hd.ma_dich_vu=dv.ma_dich_vu
-
-join loai_dich_vu as ldv
-on ldv.ma_loai_dich_vu=dv.ma_loai_dich_vu;
-
-SELECT hd.ma_hop_dong
- FROM hop_dong hd 
- join dich_vu dv
- on dv.ma_dich_vu=hd.ma_dich_vu
- WHERE MONTH((hd.ngay_lam_hop_dong) NOT IN (1, 3)) AND YEAR((hd.ngay_lam_hop_dong) = 2021)
-group by dv.ma_dich_vu;
-
 
 
 -- task 7.	Hiển thị thông tin ma_dich_vu, ten_dich_vu, dien_tich, so_nguoi_toi_da, chi_phi_thue, 
@@ -319,30 +305,43 @@ group by dv.ma_dich_vu;
 select distinct dv.ma_dich_vu, dv.ten_dich_vu, dv.dien_tich, dv.so_nguoi_toi_da, dv.chi_phi_thue , ldv.ten_loai_dich_vu
 from dich_vu dv
 join loai_dich_vu ldv on dv.ma_loai_dich_vu = ldv.ma_loai_dich_vu 
-left join hop_dong hd on dv.ma_dich_vu = hd.ma_dich_vu 
-where ldv.ma_loai_dich_vu not in (
-    select distinct dv.ma_loai_dich_vu 
-    from dich_vu dv 
-    join hop_dong hd on dv.ma_dich_vu = hd.ma_dich_vu 
-    where year(hd.ngay_lam_hop_dong) = 2020 and  year(hd.ngay_lam_hop_dong) != 2021
+where  not exists (
+    select  dv.ma_loai_dich_vu 
+    from hop_dong hd
+    where  dv.ma_dich_vu = hd.ma_dich_vu 
+      and  year(hd.ngay_lam_hop_dong) = 2021
 );
 
 -- 8.	Hiển thị thông tin ho_ten khách hàng có trong hệ thống, với yêu cầu ho_ten không trùng nhau.
 
+select distinct kh.ho_ten
+from khach_hang kh;
+
 select kh.ho_ten
 from khach_hang kh 
-
 union
 select kh.ho_ten
+from khach_hang kh ;
+
+select distinct kh.ho_ten
 from khach_hang kh 
- ;
+group by kh.ma_khach_hang;
  
 --  task 9. Thực hiện thống kê doanh thu theo tháng, nghĩa là tương ứng với mỗi tháng trong năm 2021 
 --  thì sẽ có bao nhiêu khách hàng thực hiện đặt phòng.
-select month(hd.ngay_lam_hop_dong) as "thang", count(hd.ngay_lam_hop_dong)
+select month(hd.ngay_lam_hop_dong) as "thang", count(*)
 from hop_dong hd
 where year(hd.ngay_lam_hop_dong)=2021
-group by hd.ma_hop_dong;
+group by  month(hd.ngay_lam_hop_dong)
+order by thang;
+
+-- task 10.	Hiển thị thông tin tương ứng với từng hợp đồng thì đã sử dụng bao nhiêu dịch vụ đi kèm. 
+-- Kết quả hiển thị bao gồm ma_hop_dong, ngay_lam_hop_dong, ngay_ket_thuc, tien_dat_coc, 
+-- so_luong_dich_vu_di_kem (được tính dựa trên việc sum so_luong ở dich_vu_di_kem).
+select hd.ma_hop_dong, hd.ngay_lam_hop_dong, hd.ngay_ket_thuc, hd.tien_dat_coc, sum(dvdk.so_luong) as so_luong_dich_vu_di_kem
+from hop_dong as hd 
+join dich_vu_di_kem as dvdk 
+on hd.ma_dich_vu=dvdk.ma_dich_vu_di_kem;
 
 SELECT * FROM case_study.bo_phan;
 -- //abc -- 
