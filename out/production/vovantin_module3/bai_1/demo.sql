@@ -119,3 +119,39 @@ FROM student s
 INNER JOIN class c ON s.class_id = c.id
 WHERE c.name = 'c1121g1'
 ORDER BY s.name ASC;
+
+-- --
+-- Hiển thị danh sách các lớp có học viên theo học và số lượng học viên của mỗi lớp
+SELECT class.name, COUNT(student.id) AS 'Số học viên'
+FROM class 
+LEFT JOIN student ON class.id = student.class_id
+GROUP BY class.id;
+
+-- Tính điểm lớn nhất của mỗi các lớp
+SELECT class.name, MAX(student.point) AS 'Điểm cao nhất'
+FROM class 
+INNER JOIN student ON class.id = student.class_id
+GROUP BY class.id;
+
+-- Tính điểm trung bình của từng lớp
+SELECT class.name, AVG(student.point) AS 'Điểm trung bình'
+FROM class 
+LEFT JOIN student ON class.id = student.class_id
+GROUP BY class.id;
+
+-- Lấy ra toàn bộ tên và ngày sinh các instructor và student ở CodeGym.
+SELECT name, birthday FROM instructor
+UNION ALL
+SELECT name, birthday FROM student;
+
+-- Lấy ra top 3 học viên có điểm cao nhất của trung tâm.
+SELECT name, point
+FROM student 
+ORDER BY point DESC 
+LIMIT 3;
+
+-- Lấy ra các học viên có điểm số là cao nhất của trung tâm.
+SELECT student.name, student.point 
+FROM student 
+WHERE point = (SELECT MAX(point) FROM student);
+
