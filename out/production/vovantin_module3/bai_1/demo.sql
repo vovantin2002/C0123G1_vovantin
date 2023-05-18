@@ -155,3 +155,9 @@ SELECT student.name, student.point
 FROM student 
 WHERE point = (SELECT MAX(point) FROM student);
 
+-- 1. Đánh index cho cột name
+ ALTER TABLE student  ADD INDEX i_name (`name`);
+-- 2. Xoá index cho cột name
+ALTER TABLE student DROP INDEX i_name;
+-- 3. Tạo view chứa thông tin id, name của student
+CREATE VIEW w_name AS select id, `name` from student;

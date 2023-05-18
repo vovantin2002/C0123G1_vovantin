@@ -52,15 +52,8 @@ public class Main1 {
 //        Có tivi "," null "," null ",4,3);
 //    }
     public static void main(String[] args) {
-        String str = "SELECT DISTINCT dv.ma_dich_vu, dv.ten_dich_vu, dv.dien_tich, dv.chi_phi_thue, ldv.ten_loai_dich_vu \n" +
-                "FROM dich_vu dv \n" +
-                "JOIN loai_dich_vu ldv ON dv.ma_loai_dich_vu = ldv.ma_loai_dich_vu \n" +
-                "LEFT JOIN hop_dong hd ON dv.ma_dich_vu = hd.ma_dich_vu \n" +
-                "WHERE ldv.ma_loai_dich_vu NOT IN (\n" +
-                "    SELECT DISTINCT dv.ma_loai_dich_vu \n" +
-                "    FROM dich_vu dv \n" +
-                "    JOIN hop_dong hd ON dv.ma_dich_vu = hd.ma_dich_vu \n" +
-                "    WHERE YEAR(hd.ngay_lam_hop_dong) = 2021 AND MONTH(hd.ngay_lam_hop_dong) IN (1, 2, 3)\n" +
+        String str = "SUM(hdct.so_luong) = (SELECT MAX(tong_so_luong) FROM (SELECT SUM(so_luong) \n" +
+                "AS tong_so_luong FROM hop_dong_chi_tiet GROUP BY ma_dich_vu_di_kem) AS tong_so_luong_dich_vu_di_kem);" +
                 ");";
         String str2 = str.toLowerCase();
         System.out.println(str2);

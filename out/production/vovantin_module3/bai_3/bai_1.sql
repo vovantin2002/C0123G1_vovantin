@@ -80,10 +80,12 @@ select *
 from subject
 where credit>=3 and credit<=5;
 
+
 -- Thay đổi mã lớp(ClassID) của sinh viên có tên ‘Hung’ là 2
-update student
-set class_id=2
-where student_id=1;
+set SQL_SAFE_UPDATES = 0;
+update student set class_id=2 
+where student_name="hung";
+set SQL_SAFE_UPDATES = 1;
 
 -- Hiển thị các thông tin: StudentName, SubName, Mark. Dữ liệu sắp xếp theo điểm thi (mark) giảm dần. nếu trùng sắp theo tên tăng dần.
 select student.student_name as studentname, 

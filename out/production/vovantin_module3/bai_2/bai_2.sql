@@ -65,7 +65,7 @@ select o_id, o_date, o_total_price
 from `order`;
 
 -- Hiển thị danh sách các khách hàng đã mua hàng, và danh sách sản phẩm được mua bởi các khách
-select customer.c_name,customer.c_id,customer.c_age, product.p_id,product.p_price,product.p_name
+select customer.c_name,product.p_name
 from customer
 inner join `order` on customer.c_id = `order`.c_id
 inner join order_detail on `order`.o_id = order_detail.o_id
