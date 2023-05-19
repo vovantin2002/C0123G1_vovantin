@@ -363,6 +363,7 @@ on lk.ma_loai_khach=kh.ma_loai_khach_hang
 where kh.dia_chi like "%vinh" or kh.dia_chi like "%quảng ngãi" and lk.ten_loai_khach="Diamond"
 group by dvdk.ma_dich_vu_di_kem;
 
+
 -- task 12. Hiển thị thông tin ma_hop_dong, ho_ten (nhân viên), ho_ten (khách hàng), so_dien_thoai (khách hàng), 
 -- ten_dich_vu, so_luong_dich_vu_di_kem (được tính dựa trên việc sum so_luong ở dich_vu_di_kem), tien_dat_coc của 
 -- tất cả các dịch vụ đã từng được khách hàng đặt vào 3 tháng cuối năm 2020 nhưng chưa từng được khách hàng đặt vào 6 tháng đầu năm 2021.
@@ -378,7 +379,24 @@ on dv.ma_dich_vu=hd.ma_dich_vu
 join hop_dong_chi_tiet as hdct
 on hdct.ma_hop_dong=hd.ma_hop_dong
 where  (month(hd.ngay_lam_hop_dong) in (10,11,12) and year(hd.ngay_lam_hop_dong)=2020) 
-and month(hd.ngay_lam_hop_dong) in (1,2,3,4,5,6) and year(hd.ngay_lam_hop_dong)=2021 
+group by hd.ma_hop_dong;
+-- and month(hd.ngay_lam_hop_dong) in (1,2,3,4,5,6) and year(hd.ngay_lam_hop_dong)=2021 
+
+select hd.ma_hop_dong,nv.ho_ten,kh.ho_ten,kh.so_dien_thoai,hd.tien_dat_coc,sum(hdct.so_luong) as so_luong_dich_vu_di_kem
+from hop_dong hd 
+ join dich_vu dv on dv.ma_dich_vu=hd.ma_dich_vu
+ join khach_hang kh on hd.ma_khach_hang=kh.ma_khach_hang
+ join nhan_vien nv on nv.ma_nhan_vien=hd.ma_nhan_vien
+ left join hop_dong_chi_tiet hdct on hdct.ma_hop_dong=hd.ma_hop_dong
+where hd.ma_dich_vu in (
+select hd.ma_dich_vu
+from hop_dong hd
+where quarter(hd.ngay_lam_hop_dong) = 4 and year(hd.ngay_lam_hop_dong)=2020 and hd.ma_dich_vu not in(
+select hd.ma_dich_vu
+from hop_dong hd
+where  (month(hd.ngay_lam_hop_dong) between 1 and 6) and year(hd.ngay_lam_hop_dong)=2021
+)
+)
 group by hd.ma_hop_dong;
 
 -- task 13. Hiển thị thông tin các Dịch vụ đi kèm được sử dụng nhiều nhất bởi các Khách hàng đã đặt phòng. 
@@ -398,14 +416,134 @@ select hd.ma_hop_dong, ldv.ten_loai_dich_vu, dvdk.ten_dich_vu_di_kem, count(dvdk
 from hop_dong hd
 join hop_dong_chi_tiet hdct 
 on hd.ma_hop_dong=hdct.ma_hop_dong
-left join dich_vu_di_kem dvdk
+join dich_vu_di_kem dvdk
 on dvdk.ma_dich_vu_di_kem=hdct.ma_dich_vu_di_kem
 join dich_vu dv
 on dv.ma_dich_vu=hd.ma_dich_vu
-right join loai_dich_vu ldv
+join loai_dich_vu ldv
 on ldv.ma_loai_dich_vu=dv.ma_loai_dich_vu
-where count(dvdk.ma_dich_vu_di_kem)=1
-group by hd.ma_hop_dong;
+group by hd.ma_hop_dong, ldv.ten_loai_dich_vu, dvdk.ten_dich_vu_di_kem 
+having count(dvdk.ma_dich_vu_di_kem) = 1;
+
+--  task 15. Hiển thi thông tin của tất cả nhân viên bao gồm ma_nhan_vien, ho_ten, ten_trinh_do, ten_bo_phan, so_dien_thoai, 
+--  dia_chi mới chỉ lập được tối đa 3 hợp đồng từ năm 2020 đến 2021.
+select nv.ma_nhan_vien, nv.ho_ten, td.ten_trinh_do, bp.ten_bo_phan, nv.so_dien_thoai, nv.dia_chi
+from nhan_vien nv
+left join trinh_do td
+on td.ma_trinh_do= nv.ma_trinh_do
+right join bo_phan bp
+on bp.ma_bo_phan=nv.ma_bo_phan
+join hop_dong hd
+on hd.ma_nhan_vien=nv.ma_nhan_vien
+group by nv.ma_nhan_vien
+having count(hd.ma_nhan_vien)<=3;
+
+-- task 16. Xóa những Nhân viên chưa từng lập được hợp đồng nào từ năm 2019 đến năm 2021.
+ delete from nhan_vien 
+ where nhan_vien.ma_nhan_vien  not in(
+ select hd.ma_nhan_vien
+ from hop_dong hd
+ where year(hd.ngay_lam_hop_dong) in (2019,2020,2021)
+ );
+
+-- task 17. Cập nhật thông tin những khách hàng có ten_loai_khach từ Platinum lên Diamond, 
+-- chỉ cập nhật những khách hàng đã từng đặt phòng với Tổng Tiền thanh toán trong năm 2021 là lớn hơn 10.000.000 VNĐ.
+update khach_hang kh
+set ma_loai_khach_hang =1
+where kh.ma_khach_hang in( select kh.ma_khach_hang from(
+select kh.ma_khach_hang
+from khach_hang kh
+join hop_dong hd
+on hd.ma_khach_hang=kh.ma_khach_hang
+where year(hd.ngay_lam_hop_dong)=2021 and kh.ma_loai_khach_hang=2
+)as ma_khach_hang
+);
+
+-- task 18.Xóa những khách hàng có hợp đồng trước năm 2021 (chú ý ràng buộc giữa các bảng).
+set foreign_key_checks =0;
+delete  from khach_hang kh
+where kh.ma_khach_hang in(
+select hd.ma_khach_hang 
+from hop_dong hd
+where year(hd.ngay_lam_hop_dong)<2021
+);
+-- task 19.Cập nhật giá cho các dịch vụ đi kèm được sử dụng trên 10 lần trong năm 2020 lên gấp đôi.
+update dich_vu_di_kem dvdk
+set gia=gia*2
+where ma_dich_vu_di_kem in(
+select ma_dich_vu_di_kem from(
+select hdct.ma_dich_vu_di_kem
+from hop_dong_chi_tiet hdct
+join hop_dong hd
+on hd.ma_hop_dong=hdct.ma_hop_dong
+where year(hd.ngay_lam_hop_dong)=2020 and hdct.so_luong > 10
+) as ma_dich_vu_di_kem
+);
+-- task 20.Hiển thị thông tin của tất cả các nhân viên và khách hàng có trong hệ thống, thông tin hiển 
+-- thị bao gồm id (ma_nhan_vien, ma_khach_hang), ho_ten, email, so_dien_thoai, ngay_sinh, dia_chi.
+select nv.ma_nhan_vien as id, ho_ten, nv.email, nv.so_dien_thoai, nv.ngay_sinh, nv.dia_chi
+from nhan_vien nv
+group by id
+union all
+select kh.ma_khach_hang as id, kh.ho_ten,  kh.email, kh.so_dien_thoai, kh.ngay_sinh, kh.dia_chi
+from khach_hang kh
+group by id;
+ 
+--  task 23. Tạo Stored Procedure sp_xoa_khach_hang dùng để xóa thông tin của một khách hàng nào đó 
+--  với ma_khach_hang được truyền vào như là 1 tham số của sp_xoa_khach_hang.
+delimiter //
+create procedure sp_xoa_khach_hang(p_ma_khach_hang int )
+begin
+delete from khach_hang kh
+where kh.ma_khach_hang=p_ma_khach_hang;
+end //
+delimiter ;
+call sp_xoa_khach_hang(2);
+-- task 24. Tạo Stored Procedure sp_them_moi_hop_dong dùng để thêm mới vào bảng hop_dong với yêu cầu 
+-- sp_them_moi_hop_dong phải thực hiện kiểm tra tính hợp lệ của dữ liệu bổ sung, với nguyên tắc không 
+-- được trùng khóa chính và đảm bảo toàn vẹn tham chiếu đến các bảng liên quan.
+delimiter //
+create procedure sp_them_moi_hop_dong(p_ma_hop_dong int ,
+p_ngay_lam_hop_dong datetime  ,
+p_ngay_ket_thuc datetime  ,
+p_tien_dat_coc double ,
+p_ma_nhan_vien int,
+p_ma_khach_hang int,
+p_ma_dich_vu int)
+begin 
+insert into hop_dong
+value
+(p_ma_hop_dong  ,
+p_ngay_lam_hop_dong   ,
+p_ngay_ket_thuc   ,
+p_tien_dat_coc  ,
+p_ma_nhan_vien ,
+p_ma_khach_hang ,
+p_ma_dich_vu );
+end //
+delimiter ;
+call sp_them_moi_hop_dong(13,	20201208,	20201208,	0,	3,	1,	3);
+
+-- task 25.Tạo Trigger có tên tr_xoa_hop_dong khi xóa bản ghi trong bảng hop_dong thì hiển thị tổng số 
+-- lượng bản ghi còn lại có trong bảng hop_dong ra giao diện console của database.
+-- Lưu ý: Đối với MySQL thì sử dụng SIGNAL hoặc ghi log thay cho việc ghi ở console.
+create table history_hop_dong(
+ma_hop_dong_da_xoa int auto_increment primary key,
+so_hop_dong_con_lai int,
+thoi_gian_xoa datetime not null
+);
+delimiter //
+create trigger tr_xoa_hop_dong
+alter delete on hop_dong
+for each row
+begin
+  DECLARE rowCount INT;
+    SET rowCount = @@ROWCOUNT;
+insert into history_hop_dong(ma_hop_dong, so_hop_dong_con_lai, thoi_gian_xoa)
+value 
+(old.ma_hop_dong,CAST(rowCount) as so_hop_dong_con_lai,now());
+end //
+delimiter ;
 
 SELECT * FROM case_study.bo_phan;
 -- //abc -- 

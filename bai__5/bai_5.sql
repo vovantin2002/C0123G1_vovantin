@@ -81,13 +81,23 @@ product_amount int,
 product_description varchar(45),
 product_status varchar(45))
 begin
-update products 
+update products p
 set product_code= product_code,
-set product_name=product_name,
-set product_price=product_price,
-set product_amount=product_amount ,
-set product_description=product_description,
-set product_status=product_status
-where id=p.id
+ product_name=product_name,
+ product_price=product_price,
+ product_amount=product_amount ,
+ product_description=product_description,
+ product_status=product_status
+where id=p.id;
 end //
 delimiter ;
+call sua_thong_tin_theo_id1(2, '113', 'dầu xả', '10', '2', 'mới', 'oke');
+-- Tạo store procedure xoá sản phẩm theo id
+delimiter //
+create procedure xoa_sp_theo_id(id int)
+begin 
+delete from products 
+where id= products.id;
+end //
+delimiter ;
+call xoa_sp_theo_id(5);
