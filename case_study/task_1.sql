@@ -277,13 +277,20 @@ order by so_lan_dat_phong;
 -- (những khách hàng nào chưa từng đặt phòng cũng phải hiển thị ra).
 select kh.ma_khach_hang, kh.ho_ten, lk.ten_loai_khach, hd.ma_hop_dong, dv.ten_dich_vu, hd.ngay_lam_hop_dong, hd.ngay_ket_thuc,
  ifnull(sum(dv.chi_phi_thue + ifnull((hdct.so_luong * dvdk.gia),0)),0) as tong_tien
-from khach_hang as kh
-join loai_khach as lk on kh.ma_loai_khach_hang=lk.ma_loai_khach
-left join hop_dong as hd on kh.ma_khach_hang = hd.ma_khach_hang
-left join hop_dong_chi_tiet as hdct on hdct.ma_hop_dong=hd.ma_hop_dong 
-left join dich_vu_di_kem as dvdk on hdct.ma_dich_vu_di_kem=dvdk.ma_dich_vu_di_kem
-join dich_vu as dv on hd.ma_dich_vu=dv.ma_dich_vu
-group by hd.ma_hop_dong, kh.ma_khach_hang;
+ from loai_khach lk join khach_hang kh  on lk.ma_loai_khach=kh.ma_loai_khach_hang
+join hop_dong hd on kh.ma_khach_hang = hd.ma_khach_hang
+left join hop_dong_chi_tiet hdct on hd.ma_hop_dong = hdct.ma_hop_dong
+left join dich_vu_di_kem dvdk on hdct.ma_dich_vu_di_kem=dvdk.ma_dich_vu_di_kem
+join dich_vu dv on hd.ma_dich_vu=dv.ma_dich_vu
+group by hd.ma_hop_dong;
+
+-- from khach_hang as kh
+-- join loai_khach as lk on kh.ma_loai_khach_hang=lk.ma_loai_khach
+-- left join hop_dong as hd on kh.ma_khach_hang = hd.ma_khach_hang
+-- left join hop_dong_chi_tiet as hdct on hdct.ma_hop_dong=hd.ma_hop_dong 
+-- left join dich_vu_di_kem as dvdk on hdct.ma_dich_vu_di_kem=dvdk.ma_dich_vu_di_kem
+-- join dich_vu as dv on hd.ma_dich_vu=dv.ma_dich_vu
+-- group by hd.ma_hop_dong, kh.ma_khach_hang;
 
 -- task 6	Hiển thị ma_dich_vu, ten_dich_vu, dien_tich, chi_phi_thue, ten_loai_dich_vu của tất cả các loại dịch vụ chưa từng 
 -- được khách hàng thực hiện đặt từ quý 1 của năm 2021 (Quý 1 là tháng 1, 2, 3).
@@ -343,8 +350,8 @@ select hd.ma_hop_dong, hd.ngay_lam_hop_dong, hd.ngay_ket_thuc, hd.tien_dat_coc, 
 from hop_dong as hd 
 left join hop_dong_chi_tiet hdct
 on hd.ma_hop_dong = hdct.ma_hop_dong
-join dich_vu_di_kem as dvdk 
-on hd.ma_dich_vu=dvdk.ma_dich_vu_di_kem
+-- join dich_vu_di_kem as dvdk 
+-- on hd.ma_dich_vu=dvdk.ma_dich_vu_di_kem
 group by hd.ma_hop_dong
 order by hd.ma_hop_dong;
 
@@ -352,7 +359,7 @@ order by hd.ma_hop_dong;
 -- có dia_chi ở “Vinh” hoặc “Quảng Ngãi”.
 select dvdk.ma_dich_vu_di_kem, dvdk.ten_dich_vu_di_kem
 from dich_vu_di_kem as dvdk
-left join hop_dong_chi_tiet as hdct
+join hop_dong_chi_tiet as hdct
 on dvdk.ma_dich_vu_di_kem=hdct.ma_dich_vu_di_kem
 join hop_dong as hd
 on hd.ma_hop_dong=hdct.ma_hop_dong
@@ -376,28 +383,19 @@ join khach_hang as kh
 on kh.ma_khach_hang=hd.ma_khach_hang
 join dich_vu as dv
 on dv.ma_dich_vu=hd.ma_dich_vu
-join hop_dong_chi_tiet as hdct
+left join hop_dong_chi_tiet as hdct
 on hdct.ma_hop_dong=hd.ma_hop_dong
-where  (month(hd.ngay_lam_hop_dong) in (10,11,12) and year(hd.ngay_lam_hop_dong)=2020) 
-group by hd.ma_hop_dong;
--- and month(hd.ngay_lam_hop_dong) in (1,2,3,4,5,6) and year(hd.ngay_lam_hop_dong)=2021 
-
-select hd.ma_hop_dong,nv.ho_ten,kh.ho_ten,kh.so_dien_thoai,hd.tien_dat_coc,sum(hdct.so_luong) as so_luong_dich_vu_di_kem
-from hop_dong hd 
- join dich_vu dv on dv.ma_dich_vu=hd.ma_dich_vu
- join khach_hang kh on hd.ma_khach_hang=kh.ma_khach_hang
- join nhan_vien nv on nv.ma_nhan_vien=hd.ma_nhan_vien
- left join hop_dong_chi_tiet hdct on hdct.ma_hop_dong=hd.ma_hop_dong
 where hd.ma_dich_vu in (
 select hd.ma_dich_vu
 from hop_dong hd
-where quarter(hd.ngay_lam_hop_dong) = 4 and year(hd.ngay_lam_hop_dong)=2020 and hd.ma_dich_vu not in(
+where month(hd.ngay_lam_hop_dong) between 10 and 12 and year(hd.ngay_lam_hop_dong)=2020  and hd.ma_dich_vu not in(
 select hd.ma_dich_vu
 from hop_dong hd
-where  (month(hd.ngay_lam_hop_dong) between 1 and 6) and year(hd.ngay_lam_hop_dong)=2021
+where  (month(hd.ngay_lam_hop_dong) between  1 and 6) and year(hd.ngay_lam_hop_dong)=2021
 )
 )
 group by hd.ma_hop_dong;
+
 
 -- task 13. Hiển thị thông tin các Dịch vụ đi kèm được sử dụng nhiều nhất bởi các Khách hàng đã đặt phòng. 
 -- (Lưu ý là có thể có nhiều dịch vụ có số lần sử dụng nhiều như nhau).
@@ -420,7 +418,7 @@ join dich_vu_di_kem dvdk
 on dvdk.ma_dich_vu_di_kem=hdct.ma_dich_vu_di_kem
 join dich_vu dv
 on dv.ma_dich_vu=hd.ma_dich_vu
-join loai_dich_vu ldv
+join loai_dich_vu ldv 
 on ldv.ma_loai_dich_vu=dv.ma_loai_dich_vu
 group by hd.ma_hop_dong, ldv.ten_loai_dich_vu, dvdk.ten_dich_vu_di_kem 
 having count(dvdk.ma_dich_vu_di_kem) = 1;
@@ -459,6 +457,7 @@ where year(hd.ngay_lam_hop_dong)=2021 and kh.ma_loai_khach_hang=2
 )as ma_khach_hang
 );
 
+
 -- task 18.Xóa những khách hàng có hợp đồng trước năm 2021 (chú ý ràng buộc giữa các bảng).
 set foreign_key_checks =0;
 delete  from khach_hang kh
@@ -489,6 +488,19 @@ select kh.ma_khach_hang as id, kh.ho_ten,  kh.email, kh.so_dien_thoai, kh.ngay_s
 from khach_hang kh
 group by id;
  
+ 
+--  task 21.Tạo khung nhìn có tên là v_nhan_vien để lấy được thông tin của tất cả các nhân viên có địa chỉ 
+--  là “đà nẵng” và đã từng lập hợp đồng cho một hoặc nhiều khách hàng bất kì với ngày lập hợp đồng là “2020-12-08”.
+  create view v_nhan_vien as select ma_nhan_vien, ho_ten, nv.ngay_sinh from nhan_vien nv
+  join hop_dong hd
+  on hd.ma_nhan_vien=nv.ma_nhan_vien
+  where nv.dia_chi like "%đà nẵng" and ma_nhan_vien IN (
+    select distinct ma_nhan_vien
+    from hop_dong
+    where ngay_lam_hop_dong = '2020-12-08'
+);
+
+
 --  task 23. Tạo Stored Procedure sp_xoa_khach_hang dùng để xóa thông tin của một khách hàng nào đó 
 --  với ma_khach_hang được truyền vào như là 1 tham số của sp_xoa_khach_hang.
 delimiter //
@@ -522,28 +534,37 @@ p_ma_khach_hang ,
 p_ma_dich_vu );
 end //
 delimiter ;
-call sp_them_moi_hop_dong(13,	20201208,	20201208,	0,	3,	1,	3);
+call sp_them_moi_hop_dong(14,	20201208,	20201208,	0,	3,	1,	3);
 
 -- task 25.Tạo Trigger có tên tr_xoa_hop_dong khi xóa bản ghi trong bảng hop_dong thì hiển thị tổng số 
 -- lượng bản ghi còn lại có trong bảng hop_dong ra giao diện console của database.
 -- Lưu ý: Đối với MySQL thì sử dụng SIGNAL hoặc ghi log thay cho việc ghi ở console.
-create table history_hop_dong(
-ma_hop_dong_da_xoa int auto_increment primary key,
-so_hop_dong_con_lai int,
-thoi_gian_xoa datetime not null
-);
-delimiter //
-create trigger tr_xoa_hop_dong
-alter delete on hop_dong
-for each row
-begin
-  DECLARE rowCount INT;
-    SET rowCount = @@ROWCOUNT;
-insert into history_hop_dong(ma_hop_dong, so_hop_dong_con_lai, thoi_gian_xoa)
-value 
-(old.ma_hop_dong,CAST(rowCount) as so_hop_dong_con_lai,now());
-end //
-delimiter ;
+-- create table history_hop_dong(
+-- ma_hop_dong_da_xoa int auto_increment primary key,
+-- so_hop_dong_con_lai int,
+-- thoi_gian_xoa datetime not null
+-- );
+-- delimiter //
+-- create trigger tr_xoa_hop_dong
+-- alter delete on hop_dong
+-- for each row
+-- begin
+--   DECLARE rowCount INT;
+--     select rowCount =count(*)
+-- insert into history_hop_dong(ma_hop_dong, so_hop_dong_con_lai, thoi_gian_xoa)
+-- value 
+-- (old.ma_hop_dong, rowCount ,now());
+-- end //
+-- delimiter ;
+
+
+-- task 27.	Tạo Function thực hiện yêu cầu sau:
+-- a.	Tạo Function func_dem_dich_vu: Đếm các dịch vụ đã được sử dụng với tổng tiền là > 2.000.000 VNĐ.
+-- b.	Tạo Function func_tinh_thoi_gian_hop_dong: Tính khoảng thời gian dài nhất tính từ lúc bắt đầu làm 
+-- hợp đồng đến lúc kết thúc hợp đồng mà khách hàng đã thực hiện thuê dịch vụ (lưu ý chỉ xét các khoảng 
+-- thời gian dựa vào từng lần làm hợp đồng thuê dịch vụ, không xét trên toàn bộ các lần làm hợp đồng).
+--  Mã của khách hàng được truyền vào như là 1 tham số của function này.
+
 
 SELECT * FROM case_study.bo_phan;
 -- //abc -- 
