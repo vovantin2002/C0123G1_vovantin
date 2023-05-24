@@ -1,0 +1,48 @@
+Index: bai_7/bai_2.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><!DOCTYPE html>\r\n<html lang=\"en\">\r\n<head>\r\n    <meta charset=\"UTF-8\">\r\n    <title>bai_2</title>\r\n    <style>\r\n        #row2{\r\n\r\n        }\r\n    </style>\r\n    <link rel=\"stylesheet\" href=\"bai_1.css\">\r\n</head>\r\n<body>\r\n<div>\r\n    <h3>Phim <span style=\"background: red\">Hoạt Hình</span></h3>\r\n</div>\r\n\r\n<div  style=\"text-align: center\">\r\n    <h6 >Phim hoạt hình | Phim hoạt hình yêu thích | Nhân vật hoạt hình | Góp ý</h6>\r\n<!--    <h6 class=\"col-3\"></h6>-->\r\n<!--    <h6 class=\"col-3\"></h6>-->\r\n<!--    <h6 class=\"col-3\"></h6>-->\r\n</div>\r\n\r\n<div>\r\n\r\n</div>\r\n\r\n<div>\r\n    <h6>2017 - Thiết kế web bởi trang hoathinhvn.net</h6>\r\n</div>\r\n</body>\r\n</html>
+===================================================================
+diff --git a/bai_7/bai_2.html b/bai_7/bai_2.html
+--- a/bai_7/bai_2.html	
++++ b/bai_7/bai_2.html	
+@@ -4,22 +4,23 @@
+     <meta charset="UTF-8">
+     <title>bai_2</title>
+     <style>
+-        #row2{
+-
++        .row1{
++            font-style: italic;
++        }
++        .row1_1{
++            color: white;
+         }
+     </style>
+     <link rel="stylesheet" href="bai_1.css">
+ </head>
+ <body>
+ <div>
+-    <h3>Phim <span style="background: red">Hoạt Hình</span></h3>
++    <hr>
++    <h3 class="row1">Phim <span class="row1_1" style="background: red">Hoạt Hình</span></h3>
+ </div>
+ 
+ <div  style="text-align: center">
+     <h6 >Phim hoạt hình | Phim hoạt hình yêu thích | Nhân vật hoạt hình | Góp ý</h6>
+-<!--    <h6 class="col-3"></h6>-->
+-<!--    <h6 class="col-3"></h6>-->
+-<!--    <h6 class="col-3"></h6>-->
+ </div>
+ 
+ <div>
+@@ -27,7 +28,7 @@
+ </div>
+ 
+ <div>
+-    <h6>2017 - Thiết kế web bởi trang hoathinhvn.net</h6>
++    <h6 style="text-align: center">2017 - Thiết kế web bởi trang hoathinhvn.net</h6>
+ </div>
+ </body>
+ </html>
+\ No newline at end of file
