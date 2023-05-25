@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>bai_1</title>
+    <style>
+        /* Hiển thị 4 ảnh trên cùng một dòng cho màn hình rộng hơn 700px */
+        @media screen and (min-width: 700px) {
+            .image-container {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+            }
+        }
+
+        /* Hiển thị 2 ảnh trên cùng một dòng cho màn hình từ 500px đến 700px */
+        @media screen and (max-width: 700px) and (min-width: 500px) {
+            .image-container {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+            }
+        }
+
+        /* Hiển thị 1 ảnh trênột dòng cho màn hình nhỏ hơn 500px */
+        @media screen and (max-width: 500px) {
+            .image-container {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+<h2>Responsive Image Gallery</h2>
+<h4>Resize the browser window to see the effect.</h4>
+<div class="image-container">
+    <div>
+        <a target="_blank" href="http://demo.codegym.vn/web/15/gallery/img_fjords.jpg">
+            <img src="http://demo.codegym.vn/web/15/gallery/img_fjords.jpg" alt="Trolltunga Norway" width="300"
+                 height="200">
+        </a>
+        <div>Add a description of the image here</div>
+    </div>
+    <div>
+        <a target="_blank" href="http://demo.codegym.vn/web/15/gallery/img_forest.jpg">
+            <img src="http://demo.codegym.vn/web/15/gallery/img_forest.jpg" alt="Trolltunga Norway" width="300"
+                 height="200">
+        </a>
+        <div>Add a description of the image here</div>
+    </div>
+    <div>
+        <a target="_blank" href="http://demo.codegym.vn/web/15/gallery/img_lights.jpg">
+            <img src="http://demo.codegym.vn/web/15/gallery/img_lights.jpg" alt="Trolltunga Norway" width="300"
+                 height="200">
+        </a>
+        <div>Add a description of the image here</div>
+    </div>
+    <div>
+        <a target="_blank" href="http://demo.codegym.vn/web/15/gallery/img_mountains.jpg">
+            <img src="http://demo.codegym.vn/web/15/gallery/img_mountains.jpg" alt="Trolltunga Norway" width="300"
+                 height="200">
+        </a>
+        <div>Add a description of the image here</div>
+    </div>
+</div>
+<p>This example use media queries to re-arrange the images on different screen sizes: for screens larger than 700px
+    wide, it will show four images side by side, for screens smaller than 700px, it will show two images side by side.
+    For screens smaller than 500px, the images will stack vertically (100%).</p>
+</body>
+</html>
