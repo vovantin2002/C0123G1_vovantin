@@ -22,12 +22,12 @@
         <th>Địa Chỉ</th>
         <th>Ảnh</th>
     </tr>
-    <c:forEach items="${khachHangList}" var="k" varStatus="loop">
+    <c:forEach items="${khachHangList}" var="khach_hang" varStatus="loop">
         <tr>
             <td><c:out value="${loop.count}"/></td>
-            <td><c:out value="${k.name}"/></td>
-            <td><c:out value="${k.ngaySinh}"/></td>
-            <td><c:out value="${k.diaChi}"/></td>
+            <td><c:out value="${khach_hang.name}"/></td>
+            <td><c:out value="${khach_hang.ngaySinh}"/></td>
+            <td><c:out value="${khach_hang.diaChi}"/></td>
             <td><img src="http://thuthuat123.com/uploads/2015/11/21/hinh-nen-may-tinh-hoa-dep-2_035347.jpg"
                      width="30" height="30" alt=""></td>
         </tr>

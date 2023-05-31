@@ -10,7 +10,7 @@ import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "KhachHangServlet", value = "/khach-hang-servlet")
+@WebServlet(name = "KhachHangServlet", value = "/khach-hang")
 public class KhachHangServlet extends HttpServlet {
     IKhachHangService iKhachHangService = new KhachHangService();
 
