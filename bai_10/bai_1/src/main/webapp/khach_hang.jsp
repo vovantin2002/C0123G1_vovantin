@@ -12,7 +12,7 @@
     <title>Title</title>
 </head>
 <body>
-<a href="/khach-hang-servlet">Danh sách khách hàng</a>
+<a href="/khach-hang">Danh sách khách hàng</a>
 <h3>Danh sách khách hàng</h3>
 <table border="1">
     <tr>
