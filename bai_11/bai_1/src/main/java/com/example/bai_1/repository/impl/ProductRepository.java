@@ -8,14 +8,15 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ProductRepository implements IProductRepository {
-   static List<Product>productList=new ArrayList<>();
+    static List<Product> productList = new ArrayList<>();
+
     static {
-        productList.add(new Product(0,"tin",1000.0,"moi","vovantin"));
-        productList.add(new Product(1,"iphone",1000.0,"moi","vovantin"));
-        productList.add(new Product(2,"iphone",2000.0,"moi","vovantin"));
-        productList.add(new Product(3,"iphone",3000.0,"moi","vovantin"));
-        productList.add(new Product(4,"iphone",4000.0,"moi","vovantin"));
-        productList.add(new Product(5,"iphone",5000.0,"moi","vovantin"));
+        productList.add(new Product(0, "tin", 1000.0, "moi", "vovantin"));
+        productList.add(new Product(1, "iphone", 1000.0, "moi", "vovantin"));
+        productList.add(new Product(2, "iphone", 2000.0, "moi", "vovantin"));
+        productList.add(new Product(3, "iphone", 3000.0, "moi", "vovantin"));
+        productList.add(new Product(4, "iphone", 4000.0, "moi", "vovantin"));
+        productList.add(new Product(5, "iphone", 5000.0, "moi", "vovantin"));
     }
 
     @Override
@@ -35,7 +36,7 @@ public class ProductRepository implements IProductRepository {
 
     @Override
     public void update(int id, Product product) {
-        productList.set(id,product);
+        productList.set(id, product);
     }
 
 

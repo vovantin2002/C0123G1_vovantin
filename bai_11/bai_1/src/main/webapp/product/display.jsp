@@ -41,6 +41,9 @@
             <td><c:out value="${product.price}"/></td>
             <td><c:out value="${product.describe}"/></td>
             <td><c:out value="${product.producer}"/></td>
+            <td>
+                <button name="id" type="submit"><a href="/product?action=edit"></a>Edit</button>
+            </td>
         </tr>
     </c:forEach>
 

@@ -1,25 +1,20 @@
 <%--
   Created by IntelliJ IDEA.
   User: Admin
-  Date: 5/31/2023
-  Time: 2:20 PM
+  Date: 6/1/2023
+  Time: 8:20 AM
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>create</title>
+    <title>Edit</title>
 </head>
 <body>
-<h1>Them moi san pham</h1>
-<form action="/product?action=create" method="post">
+<h1>Cap nhat san pham</h1>
+<form action="/product?action=edit" method="post">
     <fieldset>
-        <legend>Product information</legend>
         <table>
-            <tr>
-                <td>Id:</td>
-                <td><input type="number" name="id" id="id"></td>
-            </tr>
             <tr>
                 <td>Name:</td>
                 <td><input type="text" name="name" id="name"></td>
@@ -39,7 +34,7 @@
             <tr>
                 <td></td>
                 <td>
-                    <button type="submit"> add</button>
+                    <button type="submit"> Cap nhat</button>
                 </td>
             </tr>
         </table>

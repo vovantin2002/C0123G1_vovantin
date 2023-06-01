@@ -24,10 +24,10 @@ public class ProductServlet extends HttpServlet {
                 request.getRequestDispatcher("product/create.jsp").forward(request, response);
                 break;
             case "delete":
-                request.getRequestDispatcher("product/delete.jsp").forward(request,response);
+                request.getRequestDispatcher("product/delete.jsp").forward(request, response);
                 break;
-                case "search":
-                request.getRequestDispatcher("product/search.jsp").forward(request,response);
+            case "search":
+                request.getRequestDispatcher("product/search.jsp").forward(request, response);
                 break;
 
             default:
@@ -35,6 +35,7 @@ public class ProductServlet extends HttpServlet {
                 break;
         }
     }
+
 
     private void createProduct(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         productService.create(request);
@@ -66,10 +67,10 @@ public class ProductServlet extends HttpServlet {
                 createProduct(request, response);
                 break;
             case "delete":
-                deleteProduct(request,response);
+                deleteProduct(request, response);
                 break;
-                case "search":
-                    findByName(request,response);
+            case "search":
+                findByName(request, response);
                 break;
             default:
                 display(request, response);
@@ -78,7 +79,7 @@ public class ProductServlet extends HttpServlet {
     }
 
     private void findByName(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Product>list=productService.findByName(request);
+        List<Product> list = productService.findByName(request);
         System.out.println(list);
         request.setAttribute("list", list);
         request.getRequestDispatcher("product/search.jsp").forward(request, response);

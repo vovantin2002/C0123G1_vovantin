@@ -49,6 +49,11 @@ public class ProductService implements IProductService {
     @Override
     public void update(HttpServletRequest request) {
         int id = Integer.parseInt(request.getParameter("id"));
-        productRepository.update(id, display().get(id));
+        String name = request.getParameter("name");
+        Double price = Double.valueOf(request.getParameter("price"));
+        String describe = request.getParameter("describe");
+        String producer = request.getParameter("producer");
+        Product product = new Product(id, name, price, describe, producer);
+        productRepository.update(id, product);
     }
 }

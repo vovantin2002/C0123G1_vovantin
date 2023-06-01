@@ -7,8 +7,12 @@ import java.util.List;
 
 public interface IProductService {
     List<Product> display();
+
     void create(HttpServletRequest request);
+
     void delete(HttpServletRequest request);
+
     List<Product> findByName(HttpServletRequest request);
+
     void update(HttpServletRequest request);
 }
