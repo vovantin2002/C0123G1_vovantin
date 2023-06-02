@@ -12,4 +12,6 @@ public interface IProductRepository {
     void delete(int id);
 
     void update(int id, Product product);
+
+    Product findId(int id);
 }

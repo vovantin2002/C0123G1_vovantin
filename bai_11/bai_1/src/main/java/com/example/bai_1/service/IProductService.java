@@ -14,5 +14,7 @@ public interface IProductService {
 
     List<Product> findByName(HttpServletRequest request);
 
-    void update(HttpServletRequest request);
+    void update(Product product, int id);
+
+    Product findId(int id);
 }

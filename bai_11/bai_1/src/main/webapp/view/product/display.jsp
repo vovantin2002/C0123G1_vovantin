@@ -28,21 +28,22 @@
 </p>
 <table border="1">
     <tr>
-        <td>Id</td>
+        <td>STT</td>
         <td>Name</td>
         <td>Price</td>
         <td>Describe</td>
         <td>Producer</td>
+        <td>Thao Tac</td>
     </tr>
-    <c:forEach items="${productList}" var="product">
+    <c:forEach items="${productList}" var="product" varStatus="loop">
         <tr>
-            <td><c:out value="${product.id}"/></td>
+            <td><c:out value="${loop.count}"/></td>
             <td><c:out value="${product.name}"/></td>
             <td><c:out value="${product.price}"/></td>
             <td><c:out value="${product.describe}"/></td>
             <td><c:out value="${product.producer}"/></td>
             <td>
-                <button name="id" type="submit"><a href="/product?action=edit"></a>Edit</button>
+                <button><a href="/product?action=edit&id=${product.id}">Edit</a></button>
             </td>
         </tr>
     </c:forEach>

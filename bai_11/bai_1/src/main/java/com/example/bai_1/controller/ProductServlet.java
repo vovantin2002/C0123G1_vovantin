@@ -11,7 +11,7 @@ import java.util.List;
 
 @WebServlet(name = "ProductServlet", value = "/product")
 public class ProductServlet extends HttpServlet {
-    ProductService productService = new ProductService();
+    private ProductService productService = new ProductService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -21,15 +21,19 @@ public class ProductServlet extends HttpServlet {
         }
         switch (action) {
             case "create":
-                request.getRequestDispatcher("product/create.jsp").forward(request, response);
+                request.getRequestDispatcher("view/product/create.jsp").forward(request, response);
                 break;
             case "delete":
-                request.getRequestDispatcher("product/delete.jsp").forward(request, response);
+                request.getRequestDispatcher("view/product/delete.jsp").forward(request, response);
                 break;
             case "search":
-                request.getRequestDispatcher("product/search.jsp").forward(request, response);
+                request.getRequestDispatcher("view/product/search.jsp").forward(request, response);
                 break;
-
+            case "edit":
+                int id = Integer.parseInt(request.getParameter("id"));
+                request.setAttribute("product", productService.findId(id));
+                request.getRequestDispatcher("view/product/edit.jsp").forward(request, response);
+                break;
             default:
                 display(request, response);
                 break;
@@ -46,7 +50,7 @@ public class ProductServlet extends HttpServlet {
         List<Product> productList = productService.display();
         request.setAttribute("productList", productList);
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("product/display.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("view/product/display.jsp");
         try {
             dispatcher.forward(request, response);
         } catch (ServletException e) {
@@ -72,17 +76,31 @@ public class ProductServlet extends HttpServlet {
             case "search":
                 findByName(request, response);
                 break;
+            case "edit":
+                editProduct(request, response);
+                break;
+
             default:
                 display(request, response);
                 break;
         }
     }
 
+    private void editProduct(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        String name = request.getParameter("name");
+        Double price = Double.valueOf(request.getParameter("price"));
+        String describe = request.getParameter("describe");
+        String producer = request.getParameter("producer");
+        Product product = new Product(id, name, price, describe, producer);
+        productService.update(product, id);
+        response.sendRedirect("/product");
+    }
+
     private void findByName(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Product> list = productService.findByName(request);
-        System.out.println(list);
         request.setAttribute("list", list);
-        request.getRequestDispatcher("product/search.jsp").forward(request, response);
+        request.getRequestDispatcher("view/product/search.jsp").forward(request, response);
     }
 
     private void deleteProduct(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
