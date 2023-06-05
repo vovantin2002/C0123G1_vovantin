@@ -19,4 +19,10 @@ public interface IUserDAOService {
     List<User> searchUser(String country);
 
     List<User> arrangeUser();
+
+    User getUserById(int id);
+
+    void insertUserStore(User user) throws SQLException;
+
+    void addUserTransaction(User user, int[] permision);
 }

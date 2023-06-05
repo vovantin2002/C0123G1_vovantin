@@ -15,6 +15,7 @@ public class UserServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private UserDAOService userDAO;
 
+
     public void init() {
         userDAO = new UserDAOService();
     }
@@ -79,6 +80,9 @@ public class UserServlet extends HttpServlet {
                 case "search":
                     searchUser(request, response);
                     break;
+                case "permision":
+                    addUserPermision(request, response);
+                    break;
                 default:
                     listUser(request, response);
                     break;
@@ -86,6 +90,12 @@ public class UserServlet extends HttpServlet {
         } catch (SQLException ex) {
             throw new ServletException(ex);
         }
+    }
+
+    private void addUserPermision(HttpServletRequest request, HttpServletResponse response) {
+        User user = new User("quan", "quan.nguyen@codegym.vn", "vn");
+        int[] permision = {1, 2, 4};
+        userDAO.addUserTransaction(user, permision);
     }
 
     private void searchUser(HttpServletRequest request, HttpServletResponse response) {
@@ -127,7 +137,6 @@ public class UserServlet extends HttpServlet {
         RequestDispatcher dispatcher = request.getRequestDispatcher("user/edit.jsp");
         request.setAttribute("user", existingUser);
         dispatcher.forward(request, response);
-
     }
 
     private void insertUser(HttpServletRequest request, HttpServletResponse response)
