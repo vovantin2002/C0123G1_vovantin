@@ -58,7 +58,7 @@ public class UserServlet extends HttpServlet {
             throw new RuntimeException(e);
         }
     }
-//sfvxv
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getParameter("action");
